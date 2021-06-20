@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ */
+
 declare(strict_types=1);
 
 namespace Mcbeany\CustomSound;
@@ -166,7 +173,7 @@ class CustomSound extends PluginBase
             $sound_definitions = [];
             foreach (glob($this->getDataFolder() . "sounds/*.ogg") as $file) {
                 $sound = basename($file, ".ogg");
-                $zip->addFile($file, "sounds/custom/" . $sound . ".ogg");
+                $zip->addFile($file, str_replace(" ", "_", "sounds/custom/" . $sound . ".ogg"));
                 $sound_definitions = array_merge($sound_definitions, [
                     $sound => [
                         "sounds" => [
