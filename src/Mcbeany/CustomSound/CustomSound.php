@@ -1,11 +1,11 @@
 <?php
-
-/*
+/**
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+
 
 declare(strict_types=1);
 
@@ -13,7 +13,6 @@ namespace Mcbeany\CustomSound;
 
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
-use pocketmine\command\ConsoleCommandSender;
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\PlaySoundPacket;
 use pocketmine\network\mcpe\protocol\ProtocolInfo;
@@ -79,57 +78,53 @@ class CustomSound extends PluginBase
     {
         switch (strtolower($command->getName())) {
             case "playsound":
-                if ($sender instanceof ConsoleCommandSender || $sender->hasPermission("customsound.commands")) {
-                    if (count($args) > 1) {
-                        $soundName = $args[0];
-                        $target = $this->getServer()->getPlayer(isset($args[1]) ? $args[1] : $sender->getName());
-                        if ($target !== null) {
-                            $targetName = $target->getName();
-                            $volume = isset($args[2]) ? floatval($args[2]) : 1;
-                            $pitch = isset($args[3]) ? floatval($args[3]) : 1;
-                            self::playSound($soundName, $target, $target, $volume, $pitch);
-                            if ($sender instanceof Player) {
-                                $sender->sendMessage("Played sound '$soundName' to $targetName");
-                            } else {
-                                $this->getLogger()->info("Played sound '$soundName' to $targetName");
-                            }
+                if (count($args) > 1) {
+                    $soundName = $args[0];
+                    $target = $this->getServer()->getPlayer(isset($args[1]) ? $args[1] : $sender->getName());
+                    if ($target !== null) {
+                        $targetName = $target->getName();
+                        $volume = isset($args[2]) ? floatval($args[2]) : 1;
+                        $pitch = isset($args[3]) ? floatval($args[3]) : 1;
+                        self::playSound($soundName, $target, $target, $volume, $pitch);
+                        if ($sender instanceof Player) {
+                            $sender->sendMessage("Played sound '$soundName' to $targetName");
                         } else {
-                            $str = $args[1];
-                            if ($sender instanceof Player) {
-                                $sender->sendMessage("Player $str not found!");
-                            } else {
-                                $this->getLogger()->error("Player $str not found!");
-                            }
+                            $this->getLogger()->info("Played sound '$soundName' to $targetName");
                         }
                     } else {
-                        return false;
+                        $str = $args[1];
+                        if ($sender instanceof Player) {
+                            $sender->sendMessage("Player $str not found!");
+                        } else {
+                            $this->getLogger()->error("Player $str not found!");
+                        }
                     }
+                } else {
+                    return false;
                 }
                 break;
             case "stopsound":
-                if ($sender instanceof ConsoleCommandSender || $sender->hasPermission("customsound.commands")) {
-                    if (count($args) > 1) {
-                        $target = $this->getServer()->getPlayer($args[0]);
-                        $soundName = $args[1];
-                        if ($target !== null) {
-                            $targetName = $target->getName();
-                            self::stopSound($target, $soundName);
-                            if ($sender instanceof Player) {
-                                $sender->sendMessage("Stopped sound '$soundName' for $targetName");
-                            } else {
-                                $this->getLogger()->info("Stopped sound '$soundName' for $targetName");
-                            }
+                if (count($args) > 1) {
+                    $target = $this->getServer()->getPlayer($args[0]);
+                    $soundName = $args[1];
+                    if ($target !== null) {
+                        $targetName = $target->getName();
+                        self::stopSound($target, $soundName);
+                        if ($sender instanceof Player) {
+                            $sender->sendMessage("Stopped sound '$soundName' for $targetName");
                         } else {
-                            $str = $args[0];
-                            if ($sender instanceof Player) {
-                                $sender->sendMessage("Player $str not found!");
-                            } else {
-                                $this->getLogger()->error("Player $str not found!");
-                            }
+                            $this->getLogger()->info("Stopped sound '$soundName' for $targetName");
                         }
                     } else {
-                        return false;
+                        $str = $args[0];
+                        if ($sender instanceof Player) {
+                            $sender->sendMessage("Player $str not found!");
+                        } else {
+                            $this->getLogger()->error("Player $str not found!");
+                        }
                     }
+                } else {
+                    return false;
                 }
                 break;
         }
@@ -173,7 +168,7 @@ class CustomSound extends PluginBase
             $sound_definitions = [];
             foreach (glob($this->getDataFolder() . "sounds/*.ogg") as $file) {
                 $sound = basename($file, ".ogg");
-                $zip->addFile($file, str_replace(" ", "_", "sounds/custom/" . $sound . ".ogg"));
+                $zip->addFile($file, "sounds/custom/" . $sound . ".ogg");
                 $sound_definitions = array_merge($sound_definitions, [
                     $sound => [
                         "sounds" => [

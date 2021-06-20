@@ -2,7 +2,7 @@
 name: CustomSound
 version: 1.0.0
 main: Mcbeany\CustomSound\CustomSound
-api: 3.21.0
+api: 3.0.0
 author: Mcbeany
 description: Bringing custom sounds to the PocketMine server
 
