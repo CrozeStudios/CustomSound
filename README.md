@@ -13,7 +13,7 @@ To stop the sound, use: `stopsound <target> <soundName>`
 - Sounds can be overridden with default minecraft sounds
 
 ## API:
-
+Play sound:
 ```php
     /**
      * @param string $soundName
@@ -25,6 +25,7 @@ To stop the sound, use: `stopsound <target> <soundName>`
     public static function playSound(string $soundName, $target, Vector3 $position, ?float $volume = 1, ?float $pitch = 1)
 ```
 
+Stop sound:
 ```php
     /**
      * @param Player|Player[] $target
