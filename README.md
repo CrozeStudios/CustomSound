@@ -14,7 +14,8 @@ To stop the sound, use: `stopsound <target> <soundName>`
 
 ## API:
 
-```php/**
+```php
+    /**
      * @param string $soundName
      * @param Player|Player[] $target
      * @param Vector3 $position
@@ -24,7 +25,8 @@ To stop the sound, use: `stopsound <target> <soundName>`
     public static function playSound(string $soundName, $target, Vector3 $position, ?float $volume = 1, ?float $pitch = 1)
 ```
 
-```php/**
+```php
+    /**
      * @param Player|Player[] $target
      * @param string $soundName
      * @param bool $stopAll
