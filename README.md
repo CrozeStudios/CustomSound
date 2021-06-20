@@ -15,22 +15,22 @@ To stop the sound, use: `stopsound <target> <soundName>`
 ## API:
 Play sound:
 ```php
-    /**
-     * @param string $soundName
-     * @param Player|Player[] $target
-     * @param Vector3 $position
-     * @param float $volume
-     * @param float $pitch
-     */
-    CustomSound::playSound(string $soundName, $target, Vector3 $position, ?float $volume = 1, ?float $pitch = 1)
+/**
+ * @param string $soundName
+ * @param Player|Player[] $target
+ * @param Vector3 $position
+ * @param float $volume
+ * @param float $pitch
+ */
+CustomSound::playSound(string $soundName, $target, Vector3 $position, ?float $volume = 1, ?float $pitch = 1)
 ```
 
 Stop sound:
 ```php
-    /**
-     * @param Player|Player[] $target
-     * @param string $soundName
-     * @param bool $stopAll
-     */
-    CustomSound::stopSound($target, string $soundName, ?bool $stopAll = false)
+/**
+ * @param Player|Player[] $target
+ * @param string $soundName
+ * @param bool $stopAll
+ */
+CustomSound::stopSound($target, string $soundName, ?bool $stopAll = false)
 ```
