@@ -22,7 +22,7 @@ Play sound:
      * @param float $volume
      * @param float $pitch
      */
-    public static function playSound(string $soundName, $target, Vector3 $position, ?float $volume = 1, ?float $pitch = 1)
+    CustomSound::playSound(string $soundName, $target, Vector3 $position, ?float $volume = 1, ?float $pitch = 1)
 ```
 
 Stop sound:
@@ -32,5 +32,5 @@ Stop sound:
      * @param string $soundName
      * @param bool $stopAll
      */
-    public static function stopSound($target, string $soundName, ?bool $stopAll = false)
+    CustomSound::stopSound($target, string $soundName, ?bool $stopAll = false)
 ```
