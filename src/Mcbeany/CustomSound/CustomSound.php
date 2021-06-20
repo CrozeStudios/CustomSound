@@ -168,7 +168,7 @@ class CustomSound extends PluginBase
             $sound_definitions = [];
             foreach (glob($this->getDataFolder() . "sounds/*.ogg") as $file) {
                 $sound = basename($file, ".ogg");
-                $zip->addFile($file, "sounds/custom/" . $sound . ".ogg");
+                $zip->addFile($file, str_replace(" ", "_", "sounds/custom/" . $sound . ".ogg"));
                 $sound_definitions = array_merge($sound_definitions, [
                     $sound => [
                         "sounds" => [
