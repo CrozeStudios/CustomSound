@@ -6,6 +6,7 @@ namespace Mcbeany\CustomSound;
 
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
+use pocketmine\command\ConsoleCommandSender;
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\PlaySoundPacket;
 use pocketmine\network\mcpe\protocol\ProtocolInfo;
@@ -71,53 +72,57 @@ class CustomSound extends PluginBase
     {
         switch (strtolower($command->getName())) {
             case "playsound":
-                if (count($args) > 1) {
-                    $soundName = $args[0];
-                    $target = $this->getServer()->getPlayer(isset($args[1]) ? $args[1] : $sender->getName());
-                    if ($target !== null) {
-                        $targetName = $target->getName();
-                        $volume = isset($args[2]) ? floatval($args[2]) : 1;
-                        $pitch = isset($args[3]) ? floatval($args[3]) : 1;
-                        self::playSound($soundName, $target, $target, $volume, $pitch);
-                        if ($sender instanceof Player) {
-                            $sender->sendMessage("Played sound '$soundName' to $targetName");
+                if ($sender instanceof ConsoleCommandSender || $sender->hasPermission("customsound.commands")) {
+                    if (count($args) > 1) {
+                        $soundName = $args[0];
+                        $target = $this->getServer()->getPlayer(isset($args[1]) ? $args[1] : $sender->getName());
+                        if ($target !== null) {
+                            $targetName = $target->getName();
+                            $volume = isset($args[2]) ? floatval($args[2]) : 1;
+                            $pitch = isset($args[3]) ? floatval($args[3]) : 1;
+                            self::playSound($soundName, $target, $target, $volume, $pitch);
+                            if ($sender instanceof Player) {
+                                $sender->sendMessage("Played sound '$soundName' to $targetName");
+                            } else {
+                                $this->getLogger()->info("Played sound '$soundName' to $targetName");
+                            }
                         } else {
-                            $this->getLogger()->info("Played sound '$soundName' to $targetName");
+                            $str = $args[1];
+                            if ($sender instanceof Player) {
+                                $sender->sendMessage("Player $str not found!");
+                            } else {
+                                $this->getLogger()->error("Player $str not found!");
+                            }
                         }
                     } else {
-                        $str = $args[1];
-                        if ($sender instanceof Player) {
-                            $sender->sendMessage("Player $str not found!");
-                        } else {
-                            $this->getLogger()->error("Player $str not found!");
-                        }
+                        return false;
                     }
-                } else {
-                    return false;
                 }
                 break;
             case "stopsound":
-                if (count($args) > 1) {
-                    $target = $this->getServer()->getPlayer($args[0]);
-                    $soundName = $args[1];
-                    if ($target !== null) {
-                        $targetName = $target->getName();
-                        self::stopSound($target, $soundName);
-                        if ($sender instanceof Player) {
-                            $sender->sendMessage("Stopped sound '$soundName' for $targetName");
+                if ($sender instanceof ConsoleCommandSender || $sender->hasPermission("customsound.commands")) {
+                    if (count($args) > 1) {
+                        $target = $this->getServer()->getPlayer($args[0]);
+                        $soundName = $args[1];
+                        if ($target !== null) {
+                            $targetName = $target->getName();
+                            self::stopSound($target, $soundName);
+                            if ($sender instanceof Player) {
+                                $sender->sendMessage("Stopped sound '$soundName' for $targetName");
+                            } else {
+                                $this->getLogger()->info("Stopped sound '$soundName' for $targetName");
+                            }
                         } else {
-                            $this->getLogger()->info("Stopped sound '$soundName' for $targetName");
+                            $str = $args[0];
+                            if ($sender instanceof Player) {
+                                $sender->sendMessage("Player $str not found!");
+                            } else {
+                                $this->getLogger()->error("Player $str not found!");
+                            }
                         }
                     } else {
-                        $str = $args[0];
-                        if ($sender instanceof Player) {
-                            $sender->sendMessage("Player $str not found!");
-                        } else {
-                            $this->getLogger()->error("Player $str not found!");
-                        }
+                        return false;
                     }
-                } else {
-                    return false;
                 }
                 break;
         }

@@ -13,4 +13,7 @@ commands:
   stopsound:
     description: Stops a sound
     usage: /stopsound <target:string> <soundName:string>
+permissions:
+  customsound.commands:
+    default: op
 ...
