@@ -2,7 +2,7 @@
 This plugin will create a resource pack that stores your audio files!
 
 ## How to use:
-Put your audio files in `plugin_data/sounds` folder. The restart your server
+Put your audio files in `plugin_data/CustomSound/sounds` folder. The restart your server
 
 To play the sound, use: `/playsound <soundName> <target> <volume> <pitch>`
 
