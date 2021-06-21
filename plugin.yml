@@ -5,6 +5,7 @@ main: Mcbeany\CustomSound\CustomSound
 api: 3.0.0
 author: Mcbeany
 description: Bringing custom sounds to the PocketMine server
+mcpe-protocol: 440
 
 commands:
   playsound:
