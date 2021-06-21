@@ -10,7 +10,7 @@ To stop the sound, use: `stopsound <target> <soundName>`
 
 **NOTE!** 
 - Only work with `.ogg` audio files
-- Sounds can be overridden with default minecraft sounds
+- Sounds can be overridden (with default minecraft sounds too, list: https://minecraft.fandom.com/wiki/Sounds.json#Bedrock_Edition_values)
 
 ## API:
 Play sound:
