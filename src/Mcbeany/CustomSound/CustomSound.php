@@ -80,7 +80,12 @@ class CustomSound extends PluginBase
             case "playsound":
                 if (count($args) > 1) {
                     $soundName = $args[0];
-                    $target = $this->getServer()->getPlayer(isset($args[1]) ? $args[1] : $sender->getName());
+					$target = null;
+                    if (isset($args[1])) {
+						$target = $this->getServer()->getPlayer($args[1]);
+					} elseif ($sender instanceof Player) {
+						$target = $sender;
+					}
                     if ($target !== null) {
                         $targetName = $target->getName();
                         $volume = isset($args[2]) ? floatval($args[2]) : 1;
