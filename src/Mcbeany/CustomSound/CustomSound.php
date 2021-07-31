@@ -189,6 +189,7 @@ class CustomSound extends PluginBase
 
     public function onEnable()
     {
+        if (!is_dir($this->getDataFolder() . "sounds")) mkdir($this->getDataFolder() . "sounds");
         $files = glob($this->getDataFolder() . "sounds/*.ogg");
         if (!empty($files)) {
             foreach ($files as $file) {
