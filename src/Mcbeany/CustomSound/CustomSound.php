@@ -21,16 +21,11 @@ use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\resourcepacks\ZippedResourcePack;
 use pocketmine\Server;
+use pocketmine\utils\Config;
 use pocketmine\utils\UUID;
 
 class CustomSound extends PluginBase
 {
-
-    /** @var ZippedResourcePack */
-    private $pack;
-
-    /** @var self */
-    private static $instance;
 
     /**
      * @param string $soundName
@@ -66,26 +61,19 @@ class CustomSound extends PluginBase
         Server::getInstance()->broadcastPacket($target, $pk);
     }
 
-    /**
-     * @return CustomSound
-     */
-    public static function getInstance(): CustomSound
-    {
-        return self::$instance;
-    }
-
     public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool
     {
         switch (strtolower($command->getName())) {
             case "playsound":
                 if (count($args) > 1) {
                     $soundName = $args[0];
-					$target = null;
+                    $target = null;
                     if (isset($args[1])) {
-						$target = $this->getServer()->getPlayer($args[1]);
-					} elseif ($sender instanceof Player) {
-						$target = $sender;
-					}
+                        $target = $this->getServer()->getPlayer($args[1]);
+                    } elseif ($sender instanceof Player) {
+                        if (!$sender->hasPermission("customsound.commands")) return false;
+                        $target = $sender;
+                    }
                     if ($target !== null) {
                         $targetName = $target->getName();
                         $volume = isset($args[2]) ? floatval($args[2]) : 1;
@@ -116,6 +104,7 @@ class CustomSound extends PluginBase
                         $targetName = $target->getName();
                         self::stopSound($target, $soundName);
                         if ($sender instanceof Player) {
+                            if (!$sender->hasPermission("customsound.commands")) return false;
                             $sender->sendMessage("Stopped sound '$soundName' for $targetName");
                         } else {
                             $this->getLogger()->info("Stopped sound '$soundName' for $targetName");
@@ -132,21 +121,23 @@ class CustomSound extends PluginBase
                     return false;
                 }
                 break;
+            case "reloadsound":
+                if (!$sender instanceof Player) {
+                    $files = glob($this->getDataFolder() . "sounds/*.ogg");
+                    if (!empty($files)) {
+                        if (is_file($this->getServer()->getDataPath() . "resource_packs/CustomSound.zip")) {
+                            unlink($this->getServer()->getDataPath() . "resource_packs/CustomSound.zip");
+                        }
+                        $this->create();
+                        $this->getLogger()->info("Restart your server!");
+                    }
+                }
+                break;
         }
         return true;
     }
 
-    // Something
-
-    public function onLoad()
-    {
-        foreach (glob($this->getDataFolder() . "sounds/*.ogg") as $file) {
-            $this->saveResource($file);
-        }
-        self::$instance = $this;
-    }
-
-    public function onEnable()
+    private function create()
     {
         $zip = new \ZipArchive();
         if ($zip->open($this->getServer()->getDataPath() . "resource_packs/CustomSound.zip", \ZipArchive::CREATE | \ZipArchive::OVERWRITE) === true) {
@@ -185,45 +176,28 @@ class CustomSound extends PluginBase
             $zip->addFromString("sounds/sound_definitions.json", json_encode($sound_definitions, JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING));
         }
         $zip->close();
-        $this->pack = $pack = new ZippedResourcePack($this->getServer()->getDataPath() . "resource_packs/CustomSound.zip",);
-        $manager = $this->getServer()->getResourcePackManager();
-        $reflection = new \ReflectionClass($manager);
-        $property = $reflection->getProperty("resourcePacks");
-        $property->setAccessible(true);
-        $currentResourcePacks = $property->getValue($manager);
-        $currentResourcePacks[] = $pack;
-        $property->setValue($manager, $currentResourcePacks);
-        $property = $reflection->getProperty("uuidList");
-        $property->setAccessible(true);
-        $currentUUIDPacks = $property->getValue($manager);
-        $currentUUIDPacks[strtolower($pack->getPackId())] = $pack;
-        $property->setValue($manager, $currentUUIDPacks);
-        $property = $reflection->getProperty("serverForceResources");
-        $property->setAccessible(true);
-        $property->setValue($manager, true);
+
+        $config = new Config($this->getServer()->getDataPath() . "resource_packs/resource_packs.yml", Config::YAML);
+        $config->set("force_resources", true);
+        $resource_stack = $config->get("resource_stack");
+        $resource_stack[] = "CustomSound.zip";
+        $config->set("resource_stack", $resource_stack);
+        $config->save();
     }
 
-    public function onDisable()
+    // Something
+
+    public function onEnable()
     {
-        $manager = $this->getServer()->getResourcePackManager();
-        $pack = $this->pack;
-        $reflection = new \ReflectionClass($manager);
-        $property = $reflection->getProperty("resourcePacks");
-        $property->setAccessible(true);
-        $currentResourcePacks = $property->getValue($manager);
-        $key = array_search($pack, $currentResourcePacks);
-        if($key !== false){
-            unset($currentResourcePacks[$key]);
-            $property->setValue($manager, $currentResourcePacks);
+        $files = glob($this->getDataFolder() . "sounds/*.ogg");
+        if (!empty($files)) {
+            foreach ($files as $file) {
+                $this->saveResource($file);
+            }
+            if (!is_file($this->getServer()->getDataPath() . "resource_packs/CustomSound.zip")) {
+                $this->create();
+            }
         }
-        $property = $reflection->getProperty("uuidList");
-        $property->setAccessible(true);
-        $currentUUIDPacks = $property->getValue($manager);
-        if(isset($currentResourcePacks[strtolower($pack->getPackId())])) {
-            unset($currentUUIDPacks[strtolower($pack->getPackId())]);
-            $property->setValue($manager, $currentUUIDPacks);
-        }
-        unlink($this->getServer()->getDataPath() . "resource_packs/CustomSound.zip");
     }
 
 }

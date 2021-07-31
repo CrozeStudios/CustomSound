@@ -5,7 +5,6 @@ main: Mcbeany\CustomSound\CustomSound
 api: 3.0.0
 author: Mcbeany
 description: Bringing custom sounds to the PocketMine server
-mcpe-protocol: 440
 
 commands:
   playsound:
@@ -14,6 +13,8 @@ commands:
   stopsound:
     description: Stops a sound
     usage: /stopsound <target:string> <soundName:string>
+  reloadsound:
+    description: Reload all sounds
 permissions:
   customsound.commands:
     default: op

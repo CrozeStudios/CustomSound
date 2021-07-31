@@ -2,11 +2,13 @@
 This plugin will create a resource pack that stores your audio files!
 
 ## How to use:
-Put your audio files in `plugin_data/CustomSound/sounds` folder. The restart your server
+Put your audio files in `plugin_data/CustomSound/sounds` folder. Then restart your server
 
 To play the sound, use: `/playsound <soundName> <target> <volume> <pitch>`
 
 To stop the sound, use: `stopsound <target> <soundName>`
+
+If you have made some changes to the `plugin_data/CustomSound/sounds` folder. Use `/reloadsound` then restart your server.
 
 **NOTE!** 
 - Only work with `.ogg` audio files
