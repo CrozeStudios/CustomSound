@@ -160,6 +160,7 @@ class CustomSound extends PluginBase
                     ]
                 ]
             ];
+            if (is_file($this->getDataFolder() . "pack_icon.png")) $zip->addFile($this->getDataFolder() . "pack_icon.png", "pack_icon.png");
             $zip->addFromString("manifest.json", json_encode($manifest, JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING));
             $sound_definitions = [];
             foreach (glob($this->getDataFolder() . "sounds/*.ogg") as $file) {
@@ -179,8 +180,9 @@ class CustomSound extends PluginBase
 
         $config = new Config($this->getServer()->getDataPath() . "resource_packs/resource_packs.yml", Config::YAML);
         $config->set("force_resources", true);
-        $resource_stack = $config->get("resource_stack");
-        $resource_stack[] = "CustomSound.zip";
+        $resource_stack = $config->get("resource_stack", null);
+        $pack = "CustomSound.zip";
+        if (!isset($pack, $resource_stack)) $resource_stack[] = $pack;
         $config->set("resource_stack", $resource_stack);
         $config->save();
     }

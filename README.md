@@ -10,6 +10,8 @@ To stop the sound, use: `stopsound <target> <soundName>`
 
 If you have made some changes to the `plugin_data/CustomSound/sounds` folder. Use `/reloadsound` then restart your server.
 
+To add your icon put your icon file (128x128, must have .png file extension) in `plugin_data/CustomSound` folder, then rename it to `pack_icon.png`.
+
 **NOTE!** 
 - Only work with `.ogg` audio files
 - Sounds can be overridden (with default minecraft sounds too, list: https://minecraft.fandom.com/wiki/Sounds.json#Bedrock_Edition_values)
